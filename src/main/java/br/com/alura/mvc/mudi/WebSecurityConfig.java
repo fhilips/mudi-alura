@@ -1,19 +1,27 @@
 package br.com.alura.mvc.mudi;
 
+import javax.activation.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
+	
+	@Autowired
+	private javax.sql.DataSource dataSource;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
@@ -22,19 +30,28 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.formLogin(form -> form
 		            .loginPage("/login")
-		            .permitAll()
-		        ).logout(logout -> logout.logoutUrl("/logout"));
+		            .defaultSuccessUrl("/home", true)
+		            .permitAll())
+					.logout(logout -> logout.logoutUrl("/logout"));
 	}
-	@Bean
+	
 	@Override
-	public UserDetailsService userDetailsService() {
-		UserDetails user =
-			 User.withDefaultPasswordEncoder()
-				.username("charles")
-				.password("charles")
-				.roles("ADM")
-				.build();
-
-		return new InMemoryUserDetailsManager(user);
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+//		UserDetails user =
+//				 User.builder()
+//					.username("yame")
+//					.password(encoder.encode("yame"))
+//					.roles("ADM")
+//					.build();
+		
+		auth.jdbcAuthentication()
+				.dataSource(dataSource)
+				.passwordEncoder(encoder);
+//				.withUser(user);
+			
 	}
+	
+	
 }
