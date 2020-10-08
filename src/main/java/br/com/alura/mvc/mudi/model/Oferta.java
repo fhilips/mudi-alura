@@ -12,13 +12,14 @@ import javax.persistence.ManyToOne;
 
 @Entity
 public class Oferta {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private BigDecimal valor;
 	
-	private LocalDate dataEntrega;
+	private LocalDate dataDaEntrega;
 	
 	private String comentario;
 	
@@ -41,12 +42,12 @@ public class Oferta {
 		this.valor = valor;
 	}
 
-	public LocalDate getDataEntrega() {
-		return dataEntrega;
+	public LocalDate getDataDaEntrega() {
+		return dataDaEntrega;
 	}
 
-	public void setDataEntrega(LocalDate dataEntrega) {
-		this.dataEntrega = dataEntrega;
+	public void setDataDaEntrega(LocalDate dataDaEntrega) {
+		this.dataDaEntrega = dataDaEntrega;
 	}
 
 	public String getComentario() {

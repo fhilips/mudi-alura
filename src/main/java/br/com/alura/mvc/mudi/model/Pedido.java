@@ -20,7 +20,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Pedido {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String nomeProduto;
@@ -38,6 +39,7 @@ public class Pedido {
 	private User user;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "pedido", fetch = FetchType.LAZY)
+	@JsonIgnore	
 	private List<Oferta> ofertas;
 	
 	
